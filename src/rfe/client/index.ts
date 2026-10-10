@@ -3,10 +3,11 @@
 // its markup is absent.
 import { initDiagrams } from './diagram';
 import { initGlossary, initLabs, initLadders, initProgress, initQuizzes, initTasks, initVideos } from './learning';
+import { initRunControls } from './run-controls';
 import { initRunner } from './runner';
 import { initTerminals } from './terminal';
 
-for (const init of [initRunner, initLabs, initLadders, initVideos, initDiagrams, initTerminals, initTasks, initQuizzes, initProgress, initGlossary]) {
+for (const init of [initRunner, initLabs, initLadders, initVideos, initDiagrams, initTerminals, initTasks, initQuizzes, initProgress, initGlossary, initRunControls]) {
 	try {
 		init();
 	} catch (error) {

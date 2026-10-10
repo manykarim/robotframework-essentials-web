@@ -9,6 +9,13 @@ quiz and the lesson's key terms. From chapter 2 on, every chapter has a lab: a s
 ready-to-run project you download as a `.zip` and set up with one command (uv, venv or
 poetry). Quiz answers, ticked tasks and your runner choice stay in your browser.
 
+For a quick start without any setup, most labs also open as a **browser lab**: the lab's
+files, an editor with Robot Framework completion and diagnostics (RobotCode), and a
+terminal, with Python and Robot Framework running in the browser
+([Pyodide](https://pyodide.org/)). Lesson examples get a **Run in browser** button, and lab
+steps an **Open in browser lab** link. Labs that need the Browser library (chapters 8–10)
+have no browser lab.
+
 The site is built with [Astro Starlight](https://starlight.astro.build/).
 
 ## Local development
@@ -18,10 +25,15 @@ Requires Node.js 22 or newer.
 ```sh
 npm ci                 # install exactly what package-lock.json pins (from registry.npmjs.org)
 npm run dev            # live preview at http://localhost:4321/robotframework-essentials-web/
-npm run test:ci        # type check, production build with link validation, unit tests
+npm run test:ci        # type check, production build with link validation, unit and runtime tests
 npm run preview        # serve the production build at http://localhost:4321/robotframework-essentials-web/
 npm run smoke -- http://localhost:4321/robotframework-essentials-web   # serving checks
 ```
+
+`dev`, `build` and `test:ci` first run `scripts/rfe-runtime.mjs`, which downloads the browser
+lab's runtime files (about 18 MB: Pyodide's packages and wheels from PyPI) once into
+`.rfe-runtime-cache/`, verifies each against `src/rfe/play/runtime.lock.json`, and stages them
+in `public/rfe-runtime/`. Both folders are git-ignored.
 
 ## Repository layout
 
@@ -33,6 +45,8 @@ npm run smoke -- http://localhost:4321/robotframework-essentials-web   # serving
 | `src/rfe/overrides/`, `src/rfe/rewrites.json`, `src/rfe/templates/` | Web-edition wording on top of the course source |
 | `src/rfe/markdown/`, `src/rfe/components/`, `src/rfe/client/`, `src/rfe/styles/` | Lesson rendering, page components, browser scripts, theme |
 | `src/pages/labs/[lab].zip.ts` | Builds the lab downloads |
+| `src/pages/labs/[lab]/index.astro`, `src/rfe/play/` | Browser lab: playground pages, workers, Python modules, editor, terminal, Run controls |
+| `src/rfe/play/runtime.lock.json`, `scripts/rfe-runtime.mjs` | Pinned browser runtime files and the script that fetches and stages them |
 | `scripts/rfe-import.mjs` | Regenerates the generated files from the course source |
 | `site.config.mjs` | Site URL and base path |
 
@@ -58,7 +72,8 @@ Pages. Pull requests run the checks without deploying.
 
 Apache-2.0, see [LICENSE](LICENSE) and [NOTICE](NOTICE). Third-party code in
 `src/rfe/vendor/` keeps its own license; see
-[src/rfe/vendor/NOTICE.md](src/rfe/vendor/NOTICE.md).
+[src/rfe/vendor/NOTICE.md](src/rfe/vendor/NOTICE.md). NOTICE also lists the browser lab's
+runtime and editor components and their licenses.
 
 Robot Framework is a registered trademark of the Robot Framework Foundation. Visual Studio
 Code is a trademark of Microsoft Corporation.

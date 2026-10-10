@@ -1,0 +1,17 @@
+========================================================================
+Example                                                                 
+========================================================================
+Fails On Purpose                                                [31mF[0m                                                                        Fails On Purpose                                                | [31mFAIL[0m |
+1 != 2
+------------------------------------------------------------------------
+Skipped                                                         [32m.[0m                                                                        Skipped                                                         | [33mSKIP[0m |
+not today
+------------------------------------------------------------------------
+Passes                                                          [32m.[0m                                                                        Passes                                                          | [32mPASS[0m |
+------------------------------------------------------------------------
+Example                                                         | [31mFAIL[0m |
+3 tests, 1 passed, 1 failed, 1 skipped
+========================================================================
+Output:  ]8;;file:///work/rfe-ch03-keywords-imports/results/output.xml\/work/rfe-ch03-keywords-imports/results/output.xml]8;;\
+Log:     ]8;;file:///work/rfe-ch03-keywords-imports/results/log.html\/work/rfe-ch03-keywords-imports/results/log.html]8;;\
+Report:  ]8;;file:///work/rfe-ch03-keywords-imports/results/report.html\/work/rfe-ch03-keywords-imports/results/report.html]8;;\

@@ -41,6 +41,12 @@ export default defineConfig({
 	site: SITE,
 	base: BASE,
 	trailingSlash: 'ignore',
+	vite: {
+		// The browser lab's workers (src/rfe/play/*.worker.ts) are module workers.
+		worker: { format: 'es' },
+		// The browser lab page bundles CodeMirror and xterm.js (about 850 KB); only it loads them.
+		build: { chunkSizeWarningLimit: 1000 },
+	},
 	integrations: [
 		// Must come before Starlight: its Markdown plugins run before Starlight's own.
 		rfeMarkdown(),

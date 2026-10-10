@@ -1,0 +1,132 @@
+---
+// Browser lab of a lab: edit, run and inspect the lab's files in the browser (see
+// src/rfe/play/playground.ts). Every lab that doesn't need the Browser library gets one; the
+// pages stay out of the sidebar and the site search.
+import StarlightPage from '@astrojs/starlight/components/StarlightPage.astro';
+import { course } from '../../../rfe/course';
+import { labFile, labFolder, labUrl } from '../../../rfe/lib/labs.mjs';
+import { RUN_COMMAND, firstSuiteToCreate, labLessons, playgroundLabs } from '../../../rfe/play/labs.mjs';
+import lock from '../../../rfe/play/runtime.lock.json';
+import { runtimeFolder } from '../../../rfe/play/runtime.mjs';
+import '../../../rfe/styles/play.css';
+
+export function getStaticPaths() {
+	return playgroundLabs(course).map((lab) => ({ params: { lab } }));
+}
+
+const labId = String(Astro.params.lab);
+const lab = course.labs[labId];
+const lessons = labLessons(course, labId);
+const first = lessons[0];
+const chapter = first?.chapter;
+const base = course.basePath;
+const title = `Browser lab: ${lab.kind === 'lesson' ? lab.title : `${chapter?.number} · ${lab.title}`}`;
+const zip = labUrl(undefined, base, labId);
+const notices = 'https://github.com/manykarim/robotframework-essentials-web/blob/main/NOTICE';
+---
+
+<StarlightPage
+	frontmatter={{
+		title,
+		description: `Edit and run the ${lab.title} lab of Robot Framework Essentials in your browser.`,
+		template: 'splash',
+		pagefind: false,
+		tableOfContents: false,
+		prev: false,
+		next: false,
+		editUrl: false,
+	}}
+>
+	<div
+		class="rfe-play not-content"
+		id="rfe-play"
+		data-pagefind-ignore
+		data-lab={labId}
+		data-folder={labFolder(labId)}
+		data-zip={zip}
+		data-base={base}
+		data-runtime={`${base}/${runtimeFolder(lock)}`}
+		data-run={RUN_COMMAND}
+		data-create-suite={firstSuiteToCreate(course, labId, process.cwd()) ?? ''}
+		data-runner="starting"
+		data-language="off"
+	>
+		<div class="rfe-play__intro">
+			<p>
+				A quick way in: edit this lab’s files and run them right here — Python and Robot Framework run in your browser, and
+				nothing is installed. The course itself is made for your own VS Code workspace, so download the lab when you’re ready
+				to work there.
+			</p>
+			<p class="rfe-play__links">
+				{first && <a href={first.lesson.href}>Lesson: {first.lesson.title}</a>}
+				<a href={zip} download={labFile(labId)}>Download {labFile(labId)}</a>
+				<a href={notices}>Third-party notices</a>
+			</p>
+		</div>
+
+		<div class="rfe-play__notices" data-play="notices" role="status" aria-live="polite"></div>
+
+		<div class="rfe-play__toolbar" role="toolbar" aria-label="Browser lab">
+			<button type="button" class="rfe-play__button rfe-play__button--primary" data-play="run" disabled aria-keyshortcuts="Control+Enter">
+				▶&#xFE0E; Run <span class="rfe-play__kbd">Ctrl+Enter</span>
+			</button>
+			<button type="button" class="rfe-play__button" data-play="stop" disabled>■&#xFE0E; Stop</button>
+			<button type="button" class="rfe-play__button" data-play="report" disabled>Report</button>
+			<button type="button" class="rfe-play__button" data-play="log" disabled>Log</button>
+			<span class="rfe-play__spacer"></span>
+			<button type="button" class="rfe-play__button" data-play="download">Download workspace</button>
+			<button type="button" class="rfe-play__button" data-play="reset">Reset lab</button>
+			<span class="rfe-play__status" data-play="status" role="status" aria-live="polite">Preparing the lab…</span>
+		</div>
+
+		<div class="rfe-play__workbench">
+			<nav class="rfe-play__sidebar" aria-label="Lab files">
+				<div class="rfe-play__sidebar-head">
+					<h2 class="rfe-play__heading">Files</h2>
+					<button type="button" class="rfe-play__small" data-play="new-file">New file</button>
+					<button type="button" class="rfe-play__small" data-play="new-folder">New folder</button>
+				</div>
+				<ul class="rfe-play__files" data-play="files"></ul>
+				<div data-play="results-group" hidden>
+					<h2 class="rfe-play__heading">Results</h2>
+					<ul class="rfe-play__files" data-play="results-list"></ul>
+				</div>
+			</nav>
+			<section class="rfe-play__editor-pane" aria-label="Editor">
+				<p class="rfe-play__current" data-play="current"></p>
+				<div class="rfe-play__editor" data-play="editor"></div>
+			</section>
+			<section class="rfe-play__terminal-pane" aria-label="Terminal">
+				<div class="rfe-play__terminal" data-play="terminal"></div>
+			</section>
+		</div>
+
+		<!-- Report and log: a dialog that fills the window, whatever the page's scroll position. -->
+		<dialog class="rfe-play__viewer" data-play="viewer" aria-labelledby="rfe-play-viewer-title">
+			<div class="rfe-play__viewer-bar">
+				<h2 class="rfe-play__heading" id="rfe-play-viewer-title" data-play="viewer-title">Run results</h2>
+				<a class="rfe-play__small" data-play="viewer-tab" target="_blank" rel="noopener">Open in new tab</a>
+				<button type="button" class="rfe-play__small" data-play="viewer-close">Close</button>
+			</div>
+			<!-- No sandbox attribute: requests from sandboxed frames skip the service worker. The
+			     worker sandboxes every result page with its Content-Security-Policy instead. -->
+			<iframe class="rfe-play__frame" data-play="viewer-frame" title="Run results" src="about:blank"></iframe>
+		</dialog>
+
+		<dialog class="rfe-play__dialog" data-play="dialog">
+			<form method="dialog">
+				<p data-dialog="text"></p>
+				<label data-dialog="field"><span></span><input type="text" autocomplete="off" spellcheck="false" /></label>
+				<div class="rfe-play__dialog-buttons">
+					<button type="submit" value="cancel" class="rfe-play__button">Cancel</button>
+					<button type="submit" value="ok" class="rfe-play__button rfe-play__button--primary">OK</button>
+				</div>
+			</form>
+		</dialog>
+		<noscript><p>The browser lab needs JavaScript. <a href={zip}>Download the lab</a> to work in VS Code.</p></noscript>
+	</div>
+</StarlightPage>
+
+<script>
+	import '../../../rfe/play/playground.ts';
+</script>

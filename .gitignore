@@ -19,3 +19,7 @@ Thumbs.db
 
 # importer staging (scripts/rfe-import.mjs)
 .rfe-import-tmp/
+
+# browser runtime: download cache and staged copy (scripts/rfe-runtime.mjs)
+.rfe-runtime-cache/
+public/rfe-runtime/

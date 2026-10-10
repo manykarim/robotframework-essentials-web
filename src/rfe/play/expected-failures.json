@@ -1,0 +1,6 @@
+[
+	{ "lesson": "ch23-running-with-confidence/timeouts", "block": 1, "message": "Test timeout 1 second exceeded." },
+	{ "lesson": "ch23-running-with-confidence/timeouts", "block": 2, "message": "Test timeout 300 milliseconds exceeded." },
+	{ "lesson": "ch23-running-with-confidence/continue-on-failure", "block": 1, "message": "Several failures occurred:" },
+	{ "lesson": "ch23-running-with-confidence/continue-on-failure", "block": 2, "message": "Several failures occurred:" }
+]

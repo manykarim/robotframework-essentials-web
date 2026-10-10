@@ -35,5 +35,16 @@ for lab in ch09-web-flows rf-essentials-starter-kit; do
         *) check "lab $lab.zip type is zip" "application/zip or application/x-zip-compressed" "$type" ;; esac
 done
 
+# Browser lab: a playground page, the runtime, the results service worker, no page for web labs.
+RUNTIME=$(sed -n 's/.*"version": *"\([^"]*\)".*/\1/p' "$(dirname "$0")/../src/rfe/play/runtime.lock.json" | head -1)
+check "browser lab /labs/ch03-keywords-imports/" 200 "$(status /labs/ch03-keywords-imports/)"
+check "runtime rfe-runtime/$RUNTIME/pyodide.asm.wasm status" 200 "$(status "/rfe-runtime/$RUNTIME/pyodide.asm.wasm")"
+check "runtime pyodide.asm.wasm type" application/wasm "$(content_type "/rfe-runtime/$RUNTIME/pyodide.asm.wasm")"
+check "results worker labs/rfe-results-sw.js status" 200 "$(status /labs/rfe-results-sw.js)"
+type=$(content_type /labs/rfe-results-sw.js)
+case "$type" in text/javascript|application/javascript) check "results worker type is JavaScript" yes yes ;;
+    *) check "results worker type is JavaScript" "text/javascript or application/javascript" "$type" ;; esac
+check "no browser lab for web labs /labs/ch09-web-flows/" 404 "$(status /labs/ch09-web-flows/)"
+
 [ "$fail" = 0 ] && echo "all checks ok" || echo "some checks FAILED"
 exit "$fail"

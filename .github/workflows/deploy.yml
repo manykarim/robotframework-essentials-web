@@ -26,6 +26,11 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci --ignore-scripts
+      # Browser runtime downloads (scripts/rfe-runtime.mjs verifies every file against the lock).
+      - uses: actions/cache@v6
+        with:
+          path: .rfe-runtime-cache
+          key: rfe-runtime-${{ hashFiles('src/rfe/play/runtime.lock.json') }}
       - run: npm run test:ci
       - if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v5

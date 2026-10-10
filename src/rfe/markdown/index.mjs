@@ -6,11 +6,15 @@
 // Astro 7 renders Markdown with Sätteri; these are registered by `rfeMarkdown()`, an Astro
 // integration listed before Starlight so they run before Starlight's own plugins (its
 // aside plugin then renders the callouts this file turns into `:::note` directives).
+import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import course from '../generated/course.json' with { type: 'json' };
 import { parseYoutube } from '../lib/dialect.mjs';
 import { iconSvg } from '../lib/icons.mjs';
 import { RUNNERS, isRunnerSensitive, transformLine } from '../lib/runner.mjs';
 import { renderDiagram } from '../vendor/diagram-renderer.mjs';
+import { ROBOT_FENCES, robotBlocks } from '../play/blocks.mjs';
+import { hasPlayground } from '../play/labs.mjs';
 
 const SHELL = new Set(['bash', 'sh', 'shell']);
 const MARKER = /^<!--\s*(\/?)(example|hint|solution|runner)(?::(\w+))?\s*-->\s*$/;
@@ -288,6 +292,41 @@ export const nodePlugin = {
 };
 
 // ---------------------------------------------------------------------------
+// Pass 3: Run controls on Robot Framework blocks of lessons with a browser lab.
+// The blocks are classified from the lesson's source by play/blocks.mjs, as the
+// lesson-block test does, and each runnable fence is wrapped in
+// `<div data-rfe-run="inline|lab" data-lab data-file>`; client/run-controls.ts adds the buttons.
+
+/** @param {string} source  the lesson's Markdown file */
+export function runControlsPlugin(source) {
+	/** @type {ReturnType<typeof robotBlocks> | null} */
+	let blocks = null;
+	return {
+		name: 'rfe-run-controls',
+		code(node, ctx) {
+			if (!ROBOT_FENCES.has((node.lang ?? '').trim())) return;
+			if (ctx.parent(node)?.data?.hProperties?.['data-rfe-run']) return;
+			const rfe = ctx.data?.astro?.frontmatter?.rfe;
+			const lab = rfe?.kind === 'lesson' && rfe.lab ? course.labs[rfe.lab] : undefined;
+			if (!hasPlayground(lab)) return;
+			blocks ??= robotBlocks(source, { labFiles: lab.files, lessonSlug: rfe.lessonId.replace(/^\d+-/, '') });
+			// The lesson's blocks in source order; each Markdown code node takes the next one with its text.
+			const index = blocks.findIndex((b) => !b.used && b.code.trimEnd() === node.value.trimEnd());
+			if (index < 0) {
+				ctx.report({ message: 'Robot Framework block not found in the lesson source; no Run control', node, severity: 'warning' });
+				return;
+			}
+			const block = blocks[index];
+			block.used = true;
+			if (block.run === 'none') return;
+			return el('div', { class: 'rfe-run-block', 'data-rfe-run': block.run, 'data-lab': rfe.lab, 'data-file': block.file }, [
+				{ type: 'code', lang: node.lang, meta: node.meta, value: node.value },
+			]);
+		},
+	};
+}
+
+// ---------------------------------------------------------------------------
 
 /** Astro integration registering the plugins on the Sätteri processor. List it before Starlight. */
 export function rfeMarkdown() {
@@ -300,9 +339,11 @@ export function rfeMarkdown() {
 					throw new Error('rfe-markdown needs Astro’s default Sätteri Markdown processor (markdown.processor).');
 				}
 				const docsDir = fileURLToPath(new URL('src/content/docs/', config.root)).replace(/\\/g, '/');
-				const onlyDocs = (plugin) => ({ fileURL }) =>
-					fileURL && fileURLToPath(fileURL).replace(/\\/g, '/').startsWith(docsDir) ? plugin : null;
-				processor.options.mdastPlugins.push(onlyDocs(structurePlugin), onlyDocs(nodePlugin));
+				const inDocs = (fileURL) => Boolean(fileURL) && fileURLToPath(fileURL).replace(/\\/g, '/').startsWith(docsDir);
+				const onlyDocs = (plugin) => ({ fileURL }) => (inDocs(fileURL) ? plugin : null);
+				processor.options.mdastPlugins.push(onlyDocs(structurePlugin), onlyDocs(nodePlugin), ({ fileURL }) =>
+					inDocs(fileURL) ? runControlsPlugin(readFileSync(fileURLToPath(fileURL), 'utf8')) : null,
+				);
 			},
 		},
 	};

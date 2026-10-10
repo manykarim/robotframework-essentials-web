@@ -1,0 +1,18 @@
+========================================================================
+Checks                                                                  
+========================================================================
+Checks.Imports                                                          
+========================================================================
+Greeting Works                                                  [32m.[0m                                                                        Greeting Works                                                  | [32mPASS[0m |
+------------------------------------------------------------------------
+Arithmetic Holds                                                [32m.[0m                                                                        Arithmetic Holds                                                | [32mPASS[0m |
+------------------------------------------------------------------------
+Checks.Imports                                                  | [32mPASS[0m |
+2 tests, 2 passed, 0 failed
+========================================================================
+Checks                                                          | [32mPASS[0m |
+2 tests, 2 passed, 0 failed
+========================================================================
+Output:  ]8;;file:///work/rfe-ch03-keywords-imports/results/output.xml\/work/rfe-ch03-keywords-imports/results/output.xml]8;;\
+Log:     ]8;;file:///work/rfe-ch03-keywords-imports/results/log.html\/work/rfe-ch03-keywords-imports/results/log.html]8;;\
+Report:  ]8;;file:///work/rfe-ch03-keywords-imports/results/report.html\/work/rfe-ch03-keywords-imports/results/report.html]8;;\

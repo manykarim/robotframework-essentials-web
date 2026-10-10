@@ -7,6 +7,7 @@ import { iconSvg } from '../lib/icons.mjs';
 import { SETUP, labArchive, labEntries, labFile, labFolder, labUrl } from '../lib/labs.mjs';
 import { transformLine } from '../lib/runner.mjs';
 import { escapeHtml, runnerPickerHtml } from '../markdown/index.mjs';
+import { hasPlayground, playgroundPath } from '../play/labs.mjs';
 
 interface Props {
 	labId: string;
@@ -120,6 +121,14 @@ const RUNNERS = ['uv', 'venv', 'poetry'] as const;
 					</Fragment>
 				))}
 			</div>
+		)}
+		{hasPlayground(lab) && (
+			<p class="rfe-lab__browser" data-pagefind-ignore>
+				<a class="rfe-lab__open" href={playgroundPath(course.basePath, labId)} data-rfe-playground>
+					<Fragment set:html={iconSvg('terminal')} />Open in browser
+				</a>
+				<span>No setup? Try the lab right here: its files, an editor and a terminal, running in your browser.</span>
+			</p>
 		)}
 		<details class="rfe-lab__files">
 			<summary>What's inside</summary>
