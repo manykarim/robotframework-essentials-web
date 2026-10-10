@@ -1,0 +1,26 @@
+---
+// Where a lesson sits in the course: part, chapter, and its syllabus scope.
+import { course } from '../course';
+import { iconSvg } from '../lib/icons.mjs';
+
+interface Props {
+	part: number;
+	chapterId: string;
+	scope?: string | undefined;
+}
+const { part: partNo, chapterId, scope } = Astro.props;
+const part = course.parts.find((p) => p.n === partNo);
+const chapter = part?.chapters.find((c) => c.id === chapterId);
+---
+
+{part && chapter && (
+	<nav class="rfe-context not-content" aria-label="Position in the course">
+		<a class="rfe-context__part" href={part.href}>Part {part.n} · {part.title}</a>
+		<span class="rfe-context__sep" aria-hidden="true">›</span>
+		<span class="rfe-context__chapter">
+			<Fragment set:html={chapter.icon ? iconSvg(chapter.icon) : ''} />
+			{chapter.number} · {chapter.title}
+		</span>
+		{scope && <span class="rfe-context__scope">{scope}</span>}
+	</nav>
+)}

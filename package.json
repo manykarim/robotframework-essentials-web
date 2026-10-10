@@ -1,0 +1,36 @@
+{
+  "name": "robotframework-essentials-web",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "Robot Framework Essentials, a hands-on Robot Framework course, as a website.",
+  "license": "Apache-2.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/manykarim/robotframework-essentials-web.git"
+  },
+  "homepage": "https://manykarim.github.io/robotframework-essentials-web/",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test:ci": "astro check && astro build && npm run test:rfe",
+    "test:rfe": "node --test \"src/rfe/**/*.test.mjs\" \"scripts/**/*.test.mjs\"",
+    "smoke": "sh scripts/smoke.sh",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/starlight": "^0.42.5",
+    "astro": "^7.2.10",
+    "sharp": "^0.35.3",
+    "starlight-links-validator": "^0.26.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^5.9.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,38 @@
+---
+// All key terms, alphabetical, filterable by kind; each entry links to its lesson.
+import { course } from '../course';
+import { slugify } from '../lib/dialect.mjs';
+import { inlineMarkdown } from '../lib/inline.mjs';
+
+const FILTERS = [
+	['all', 'All'],
+	['concept', 'Concepts'],
+	['keyword', 'Keywords'],
+	['command', 'Commands'],
+] as const;
+---
+
+<div class="rfe-glossary not-content" data-rfe-glossary>
+	<div class="rfe-glossary__filters" data-pagefind-ignore role="group" aria-label="Filter terms by kind" hidden>
+		{FILTERS.map(([kind, label]) => (
+			<button type="button" data-filter={kind} aria-pressed={kind === 'all' ? 'true' : 'false'}>{label}</button>
+		))}
+		<span class="rfe-glossary__count" aria-live="polite" />
+	</div>
+	<dl class="rfe-glossary__list">
+		{course.glossary.map((t) => (
+			<div class="rfe-glossary__entry" data-kind={t.kind} id={`term-${slugify(t.term) || 'x'}`}>
+				<dt>
+					<span class="rfe-glossary__term" set:html={inlineMarkdown(t.term)} />
+					<span class={`rfe-kind rfe-kind--${t.kind}`}>{t.kind}</span>
+				</dt>
+				{t.entries.map((e) => (
+					<dd>
+						<span set:html={inlineMarkdown(e.note)} />{' '}
+						<a class="rfe-glossary__lesson" href={e.href}>{e.lesson}</a>
+					</dd>
+				))}
+			</div>
+		))}
+	</dl>
+</div>

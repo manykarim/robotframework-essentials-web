@@ -1,0 +1,27 @@
+---
+// Extra prerequisites of a part's labs (browser engine, demo shop) beyond Python.
+interface Props {
+	requires: string[];
+}
+const { requires } = Astro.props;
+---
+
+{requires.length > 0 && (
+	<aside class="rfe-prereqs not-content" aria-label="Prerequisites">
+		<p class="rfe-prereqs__title">Before you start this part</p>
+		<ul>
+			{requires.includes('browser') && (
+				<li>
+					<strong>Node.js</strong> (an LTS release) for the Browser library, plus a one-time <code>rfbrowser init chromium</code>{' '}
+					(a large download) — each lab card shows the exact command for your runner.
+				</li>
+			)}
+			{requires.includes('sut') && (
+				<li>
+					The <strong>RF Demo Shop</strong> runs locally from the lab: start it with <code>uv run python demo_app/serve.py</code> in its
+					own terminal and keep it running while you work.
+				</li>
+			)}
+		</ul>
+	</aside>
+)}

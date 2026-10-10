@@ -1,0 +1,129 @@
+---
+// Lab card: download a lab, fetch it from a terminal, open it in VS Code, set it up for
+// the selected runner, and see what's inside.
+import { Code, FileTree, TabItem, Tabs } from '@astrojs/starlight/components';
+import { course } from '../course';
+import { iconSvg } from '../lib/icons.mjs';
+import { SETUP, labArchive, labEntries, labFile, labFolder, labUrl } from '../lib/labs.mjs';
+import { transformLine } from '../lib/runner.mjs';
+import { escapeHtml, runnerPickerHtml } from '../markdown/index.mjs';
+
+interface Props {
+	labId: string;
+	/** The first lesson that uses this lab: expanded, with the download as the first step. */
+	open?: boolean;
+}
+const { labId, open = false } = Astro.props;
+const lab = course.labs[labId];
+if (!lab) throw new Error(`unknown lab ${labId}`);
+const site = Astro.site;
+const url = labUrl(site, course.basePath, labId);
+const href = labUrl(undefined, course.basePath, labId);
+const file = labFile(labId);
+const folder = labFolder(labId);
+const size = `${Math.max(1, Math.round(labArchive(course, labId, { site, root: process.cwd() }).length / 1024))} KB`;
+const isLessonLab = lab.kind === 'lesson';
+
+const bash = `curl -fsSLO ${url} && unzip -q ${file} && rm ${file}`;
+const powershell = `Invoke-WebRequest ${url} -OutFile ${file}; Expand-Archive ${file} -DestinationPath .; Remove-Item ${file}`;
+
+// Nested <ul> for Starlight's FileTree, from the archive's own entries.
+type Tree = { [name: string]: Tree | null };
+const tree: Tree = {};
+for (const { path } of labEntries(course, labId, { site, root: process.cwd() })) {
+	let node = tree;
+	const parts = path.split('/');
+	parts.forEach((part, i) => {
+		if (i === parts.length - 1) node[part] = null;
+		else node = (node[part] ??= {}) as Tree;
+	});
+}
+const listHtml = (node: Tree): string =>
+	'<ul>' +
+	Object.keys(node)
+		.sort((a, b) => Number(node[b] !== null) - Number(node[a] !== null) || a.localeCompare(b))
+		.map((name) => {
+			const child = node[name];
+			return child === null ? `<li>${escapeHtml(name)}</li>` : `<li>${escapeHtml(name)}/${listHtml(child)}</li>`;
+		})
+		.join('') +
+	'</ul>';
+
+const runnerCommand = (command: string) => ({
+	uv: command,
+	venv: transformLine(command, 'venv'),
+	poetry: transformLine(command, 'poetry'),
+});
+const prerequisites = [
+	...(lab.requires.includes('browser')
+		? [{ text: 'Install Node.js (an LTS release), then run once — it downloads a browser engine (large):', command: runnerCommand('uv run rfbrowser init chromium') }]
+		: []),
+	...(lab.requires.includes('sut')
+		? [{ text: 'Start the RF Demo Shop in its own terminal and keep it running while you work:', command: runnerCommand('uv run python demo_app/serve.py') }]
+		: []),
+];
+const RUNNERS = ['uv', 'venv', 'poetry'] as const;
+---
+
+<details class="rfe-lab not-content" data-rfe-lab data-pagefind-ignore data-site-origin={site ? new URL(site).origin : ''} open={open}>
+	<summary class="rfe-lab__summary">
+		<span class="rfe-lab__icon" set:html={iconSvg('package')} />
+		<span class="rfe-lab__heading">
+			<span class="rfe-lab__title">{isLessonLab ? 'Lesson lab' : 'Chapter lab'}: {lab.title}</span>
+			<span class="rfe-lab__meta">{file} · {size}</span>
+		</span>
+	</summary>
+	<div class="rfe-lab__body">
+		<p>
+			{!open
+				? 'This lesson continues in the same lab as the lesson before it. If you don\u2019t have it yet, download it here.'
+				: isLessonLab
+					? 'This lesson starts from a fresh lab — download it even if you already have the chapter lab.'
+					: 'This chapter works in a prepared project. Download it before the first task; it unpacks into its own folder.'}
+		</p>
+		<p class="rfe-lab__actions">
+			<a class="rfe-lab__download" href={href} download={file}>
+				<Fragment set:html={iconSvg('package')} />Download {file}
+			</a>
+		</p>
+		<p class="rfe-lab__step">Or fetch and unpack it from a terminal in VS Code:</p>
+		<Tabs syncKey="rfe-shell">
+			<TabItem label="bash / zsh"><Code code={bash} lang="bash" wrap /></TabItem>
+			<TabItem label="PowerShell"><Code code={powershell} lang="powershell" wrap /></TabItem>
+		</Tabs>
+		<p>
+			Open the folder in VS Code with <code>code {folder}</code> (or <strong>File → Open Folder…</strong>) and accept
+			the recommended RobotCode and Python extensions. Then set it up:
+		</p>
+		<Fragment set:html={runnerPickerHtml()} />
+		<div class="rfe-variant" data-runner="uv"><Code code={SETUP.uv.bash} lang="bash" /></div>
+		<div class="rfe-variant" data-runner="venv" data-pagefind-ignore>
+			<Tabs syncKey="rfe-shell">
+				<TabItem label="bash / zsh"><Code code={SETUP.venv.bash} lang="bash" /></TabItem>
+				<TabItem label="PowerShell"><Code code={SETUP.venv.powershell} lang="powershell" /></TabItem>
+			</Tabs>
+			<p class="rfe-lab__note">Keep the environment active in every terminal where you run lesson commands.</p>
+		</div>
+		<div class="rfe-variant" data-runner="poetry" data-pagefind-ignore><Code code={SETUP.poetry.bash} lang="bash" /></div>
+		<p class="rfe-lab__note">Python {course.python} or newer is required; uv installs it when it is missing.</p>
+		{prerequisites.length > 0 && (
+			<div class="rfe-lab__prereqs">
+				<p class="rfe-lab__step"><strong>Also needed for this lab</strong></p>
+				{prerequisites.map((p) => (
+					<Fragment>
+						<p>{p.text}</p>
+						{RUNNERS.map((r) => (
+							<div class="rfe-variant" data-runner={r} {...(r === 'uv' ? {} : { 'data-pagefind-ignore': '' })}>
+								<Code code={p.command[r]} lang="bash" />
+							</div>
+						))}
+					</Fragment>
+				))}
+			</div>
+		)}
+		<details class="rfe-lab__files">
+			<summary>What's inside</summary>
+			<FileTree><Fragment set:html={listHtml(tree)} /></FileTree>
+		</details>
+	</div>
+</details>

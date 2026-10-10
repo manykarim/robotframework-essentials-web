@@ -1,0 +1,48 @@
+---
+// Course landing additions: overall progress, the parts, the starter kit, and a reset.
+import { course, type CoursePart } from '../course';
+import { iconSvg } from '../lib/icons.mjs';
+import { STARTER_KIT, labArchive, labFile, labUrl, labsInOrder } from '../lib/labs.mjs';
+
+const lessonsOf = (parts: CoursePart[]) =>
+	parts.flatMap((p) => p.chapters.flatMap((c) => c.lessons.map((l) => `${c.id}/${l.id}|${l.tasks}`))).join(' ');
+const kitSize = `${Math.round(labArchive(course, STARTER_KIT, { site: Astro.site, root: process.cwd() }).length / 1024)} KB`;
+const labCount = labsInOrder(course).length;
+---
+
+<div class="rfe-overview not-content">
+	<div class="rfe-progress" data-pagefind-ignore data-rfe-progress data-lessons={lessonsOf(course.parts)} hidden>
+		<span class="rfe-progress__bar"><span /></span>
+		<span class="rfe-progress__text" />
+	</div>
+	<h2 class="rfe-overview__heading">The eight parts</h2>
+	<ol class="rfe-parts">
+		{course.parts.map((p) => (
+			<li>
+				<a class="rfe-part-card" href={p.href}>
+					<span class="rfe-part-card__no">Part {p.n}</span>
+					<span class="rfe-part-card__title">{p.title}</span>
+					<span class="rfe-part-card__meta">
+						{p.chapters.length} chapters · {p.chapters.reduce((s, c) => s + c.lessons.length, 0)} lessons
+					</span>
+					<span class="rfe-progress rfe-progress--mini" data-pagefind-ignore data-rfe-progress data-lessons={lessonsOf([p])} hidden>
+						<span class="rfe-progress__bar"><span /></span>
+						<span class="rfe-progress__text" />
+					</span>
+				</a>
+			</li>
+		))}
+	</ol>
+	<section class="rfe-starter" aria-labelledby="rfe-starter-heading">
+		<h2 id="rfe-starter-heading">Starter kit</h2>
+		<p>All {labCount} labs in one download, one folder per lab, each with its own <code>LAB.md</code>.</p>
+		<p>
+			<a class="rfe-lab__download" href={labUrl(undefined, course.basePath, STARTER_KIT)} download={labFile(STARTER_KIT)}>
+				<Fragment set:html={iconSvg('package')} />Download {labFile(STARTER_KIT)} ({kitSize})
+			</a>
+		</p>
+	</section>
+	<p class="rfe-reset" data-pagefind-ignore>
+		<button type="button" data-rfe-reset hidden>Reset course progress</button>
+	</p>
+</div>

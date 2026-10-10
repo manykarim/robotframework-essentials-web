@@ -1,0 +1,21 @@
+# build output
+dist/
+# generated types and content cache
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+
+# environment variables
+.env
+.env.production
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# importer staging (scripts/rfe-import.mjs)
+.rfe-import-tmp/

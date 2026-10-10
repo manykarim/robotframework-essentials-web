@@ -1,0 +1,58 @@
+---
+// Part overview: prerequisites, progress, and each chapter with its lab and lessons.
+import { course } from '../course';
+import { iconSvg } from '../lib/icons.mjs';
+import { labFile, labUrl } from '../lib/labs.mjs';
+import Prerequisites from './Prerequisites.astro';
+
+interface Props {
+	part: number;
+}
+const part = course.parts.find((p) => p.n === Astro.props.part);
+const lessonsOf = (p: NonNullable<typeof part>) =>
+	p.chapters.flatMap((c) => c.lessons.map((l) => `${c.id}/${l.id}|${l.tasks}`)).join(' ');
+---
+
+{part && (
+	<div class="rfe-part not-content">
+		<Prerequisites requires={part.requires} />
+		<div class="rfe-progress" data-pagefind-ignore data-rfe-progress data-lessons={lessonsOf(part)} hidden>
+			<span class="rfe-progress__bar"><span /></span>
+			<span class="rfe-progress__text" />
+		</div>
+		<ol class="rfe-chapters">
+			{part.chapters.map((c) => (
+				<li class="rfe-chapter">
+					<div class="rfe-chapter__head">
+						<span class="rfe-chapter__icon" set:html={c.icon ? iconSvg(c.icon) : ''} />
+						<h2 class="rfe-chapter__title">
+							<span class="rfe-chapter__no">Chapter {c.number}</span>
+							{c.title}
+						</h2>
+						{c.lab && (
+							<a class="rfe-chapter__lab" href={labUrl(undefined, course.basePath, c.lab)} download={labFile(c.lab)}>
+								<Fragment set:html={iconSvg('package')} />Chapter lab
+							</a>
+						)}
+					</div>
+					<ol class="rfe-lessons">
+						{c.lessons.map((l) => (
+							<li class="rfe-lessons__item">
+								<span class="rfe-state" data-pagefind-ignore data-rfe-lesson-state data-lesson={`${c.id}/${l.id}`} data-tasks={l.tasks}>
+									<span class="sr-only">Not started</span>
+								</span>
+								<a href={l.href}>{l.title}</a>
+								{l.scope && <span class="rfe-lessons__scope">{l.scope}</span>}
+								{l.lab && l.lab !== c.lab && l.lab !== c.lessons[c.lessons.indexOf(l) - 1]?.lab && (
+									<a class="rfe-lessons__lab" href={labUrl(undefined, course.basePath, l.lab)} download={labFile(l.lab)}>
+										fresh lesson lab
+									</a>
+								)}
+							</li>
+						))}
+					</ol>
+				</li>
+			))}
+		</ol>
+	</div>
+)}

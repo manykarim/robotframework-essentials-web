@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="6" failures="1" errors="0" time="4.812">
+  <testsuite name="Checkout" tests="3" failures="1" time="2.104">
+    <testcase name="Sign in succeeds" classname="checkout.login" time="0.512"/>
+    <testcase name="Cart totals are correct" classname="checkout.cart" time="0.640"/>
+    <testcase name="Blocked user is refused" classname="checkout.login" time="0.952">
+      <failure message="Expected error banner" type="AssertionError">login-error was not visible</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="Catalog" tests="3" failures="0" time="2.708">
+    <testcase name="Search returns matches" classname="catalog.search" time="1.204"/>
+    <testcase name="Prices are formatted" classname="catalog.render" time="0.700"/>
+    <testcase name="Empty search lists all" classname="catalog.search" time="0.804"/>
+  </testsuite>
+</testsuites>

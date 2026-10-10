@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog updated="2026-07-01">
+  <product slug="trail-backpack" stock="12">
+    <name>Trail Backpack</name>
+    <price currency="EUR">79.00</price>
+    <tags>
+      <tag>outdoor</tag>
+      <tag>bags</tag>
+    </tags>
+  </product>
+  <product slug="desk-lamp" stock="8">
+    <name>Desk Lamp</name>
+    <price currency="EUR">34.50</price>
+    <tags>
+      <tag>home</tag>
+      <tag>lighting</tag>
+    </tags>
+  </product>
+  <product slug="travel-mug" stock="24">
+    <name>Travel Mug</name>
+    <price currency="EUR">19.90</price>
+    <tags>
+      <tag>outdoor</tag>
+      <tag>kitchen</tag>
+    </tags>
+  </product>
+  <product slug="notebook-set" stock="30">
+    <name>Notebook Set</name>
+    <price currency="EUR">12.00</price>
+    <tags>
+      <tag>office</tag>
+    </tags>
+  </product>
+</catalog>

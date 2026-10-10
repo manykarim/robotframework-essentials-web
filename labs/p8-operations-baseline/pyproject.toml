@@ -1,0 +1,11 @@
+[project]
+name = "rf-essentials-operations"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "robotframework>=7.4.2",
+    "robotframework-robocop>=8.3.2",
+    "robotframework-pabot>=5.2.2",
+]

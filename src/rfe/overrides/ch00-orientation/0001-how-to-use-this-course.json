@@ -1,0 +1,29 @@
+{
+	"quiz": [
+		{
+			"question": "A task's “Done when” line holds in your workspace. What next?",
+			"options": [
+				"Tick Done on the task — it records your progress in this browser",
+				"Upload your files to an instructor for grading",
+				"Restart the lesson from the top"
+			],
+			"answerIndex": 0,
+			"explanation": "“Done when” states what to verify; you check it yourself and tick Done. The tick is stored in this browser and shows on the part overview."
+		},
+		{
+			"question": "How do quizzes work here?",
+			"options": [
+				"They gate progress — you cannot continue until every answer is correct",
+				"They give immediate feedback and never block your progress",
+				"They are emailed to a grader for review"
+			],
+			"answerIndex": 1,
+			"explanation": "Quizzes are for you: your first answer is remembered in this browser and the explanation shows the reasoning either way, but they never gate the lesson."
+		}
+	],
+	"deck": [
+		{ "term": "Done when", "kind": "concept", "note": "The line that ends each task: what to verify in your workspace before you tick the task done." },
+		{ "term": "hint ladder", "kind": "concept", "note": "Staged hints on a build-task, revealed one at a time, with the full solution as the final rung — help is always available and you are never stuck." },
+		{ "term": "Glossary", "kind": "concept", "note": "Every key term from the course in one place, filterable by kind, each linking to the lesson that introduces it." }
+	]
+}

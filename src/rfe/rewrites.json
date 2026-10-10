@@ -1,0 +1,52 @@
+[
+	{
+		"scope": "ch01-introduction/0002-architecture-and-setup",
+		"find": "pick yours with **\"Run with\"** at the top\nof this panel:",
+		"replace": "pick yours with the **\"Run with\"** picker\nabove the first command below:"
+	},
+	{
+		"scope": "ch01-introduction/0002-architecture-and-setup",
+		"find": "Every command example below and throughout the course adapts to your choice, and\nthe **Run** button runs the right thing. You can change it any time (it\nre-initializes the workspace to match).",
+		"replace": "Every command example below and throughout the course adapts to your choice. You\ncan change it any time; set each lab up with the runner you picked."
+	},
+	{
+		"scope": "ch01-introduction/0002-architecture-and-setup",
+		"find": "2. Install Robot Framework into it:",
+		"replace": "2. Activate it — `source .venv/bin/activate`, or `.venv\\Scripts\\Activate.ps1` in\n   PowerShell — then install Robot Framework into it:"
+	},
+	{
+		"scope": "ch01-introduction/0002-architecture-and-setup",
+		"find": "The\n> extension does this for you when the Python extension is installed; otherwise\n> run **Python: Select Interpreter** and choose `.venv`.",
+		"replace": "Run\n> **Python: Select Interpreter** and choose `.venv`."
+	},
+	{
+		"scope": "ch01-introduction/0003-suites-keywords-files",
+		"find": "> **Note:** Everything required for the course is bundled — no downloads beyond\n> the Python package index. The optional Foundation videos need internet access;\n> their cards also provide a link to open them on YouTube. When a lesson mentions\n> the User Guide or a library's docs, the Reference Deck carries the link.",
+		"replace": "> **Note:** Everything the course needs comes in the labs — no downloads beyond\n> the Python package index. The optional Foundation videos need internet access;\n> their cards open them on YouTube."
+	},
+	{
+		"scope": "ch01-introduction/0001-what-robot-framework-is",
+		"find": "Your\nfirst answer for each question is saved for your recall indicators, and the\nexplanation shows the reasoning either way. Then press **Check** to mark the\nreading done.",
+		"replace": "Your\nfirst answer for each question stays in this browser, and the explanation shows\nthe reasoning either way. Then tick **Done** to mark the reading done."
+	},
+	{
+		"scope": "ch02-first-suite/0002-syntax-rules",
+		"find": "Initialize the chapter, then",
+		"replace": "Download this lesson's lab, then"
+	},
+	{
+		"scope": "ch04-variables-keywords/0003-import-hierarchies-and-conflicts",
+		"find": "Initialize the chapter, then",
+		"replace": "Download this lesson's lab, then"
+	},
+	{
+		"scope": "ch05-specification-styles/0001-templates",
+		"find": "Initialize the chapter, then",
+		"replace": "Download this chapter's lab, then"
+	},
+	{
+		"scope": "ch06-structure-control/0002-initialization-files",
+		"find": "Initialize the chapter, then",
+		"replace": "Download this lesson's lab, then"
+	}
+]

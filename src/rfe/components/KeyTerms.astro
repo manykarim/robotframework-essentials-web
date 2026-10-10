@@ -1,0 +1,28 @@
+---
+// The lesson's key terms, linking on to the course glossary.
+import { course } from '../course';
+import { inlineMarkdown } from '../lib/inline.mjs';
+
+interface Props {
+	deck: { term: string; kind: string; note: string }[];
+}
+const { deck } = Astro.props;
+---
+
+{deck.length > 0 && (
+	<section class="rfe-terms not-content" aria-labelledby="rfe-terms-heading">
+		<h2 id="rfe-terms-heading">Key terms</h2>
+		<dl class="rfe-terms__list">
+			{deck.map((d) => (
+				<div class="rfe-terms__item">
+					<dt>
+						<span class="rfe-terms__term" set:html={inlineMarkdown(d.term)} />
+						<span class={`rfe-kind rfe-kind--${d.kind}`}>{d.kind}</span>
+					</dt>
+					<dd set:html={inlineMarkdown(d.note)} />
+				</div>
+			))}
+		</dl>
+		<p class="rfe-terms__more"><a href={`${course.basePath}/glossary/`}>All terms in the glossary →</a></p>
+	</section>
+)}

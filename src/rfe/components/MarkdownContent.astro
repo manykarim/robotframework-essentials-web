@@ -1,0 +1,44 @@
+---
+// Starlight MarkdownContent override. Course pages get their course context, lab card,
+// quiz, key terms, part listing, overview, or glossary around the page body; a page without
+// course data renders as Starlight's default. The client script enhances the lesson
+// dialect (terminal demos, diagrams, hint ladders, runner picker) on every page.
+import Default from '@astrojs/starlight/components/MarkdownContent.astro';
+import { course } from '../course';
+import CourseOverview from './CourseOverview.astro';
+import Glossary from './Glossary.astro';
+import KeyTerms from './KeyTerms.astro';
+import LabCard from './LabCard.astro';
+import LessonContext from './LessonContext.astro';
+import PartListing from './PartListing.astro';
+import Quiz from './Quiz.astro';
+
+const rfe = Astro.locals.starlightRoute.entry.data.rfe;
+const lesson = rfe?.kind === 'lesson' ? rfe : undefined;
+const lessonKey = lesson ? `${lesson.chapterId}/${lesson.lessonId}` : '';
+const lessonHref = lesson
+	? course.parts.flatMap((p) => p.chapters).find((c) => c.id === lesson.chapterId)?.lessons.find((l) => l.id === lesson.lessonId)?.href
+	: undefined;
+const lab = lesson?.lab ? course.labs[lesson.lab] : undefined;
+---
+
+{rfe ? (
+	<div class="rfe-page" data-rfe-course data-rfe-kind={rfe.kind}>
+		<Default>
+			{lesson && <LessonContext part={lesson.part} chapterId={lesson.chapterId} scope={lesson.scope} />}
+			{lesson?.lab && lab && <LabCard labId={lesson.lab} open={lab.lessons[0] === lessonHref} />}
+			<slot />
+			{lesson && <Quiz lessonKey={lessonKey} quiz={lesson.quiz} />}
+			{lesson && <KeyTerms deck={lesson.deck} />}
+			{rfe.kind === 'part' && <PartListing part={rfe.part} />}
+			{rfe.kind === 'landing' && <CourseOverview />}
+			{rfe.kind === 'glossary' && <Glossary />}
+		</Default>
+	</div>
+) : (
+	<Default><slot /></Default>
+)}
+
+<script>
+	import '../client/index.ts';
+</script>

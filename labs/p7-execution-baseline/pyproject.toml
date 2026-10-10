@@ -1,0 +1,10 @@
+[project]
+name = "rf-essentials-execution"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "robotframework>=7.4.2",
+    "robotframework-pythonlibcore>=4.4.1",
+]

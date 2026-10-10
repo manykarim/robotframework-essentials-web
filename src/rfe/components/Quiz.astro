@@ -1,0 +1,41 @@
+---
+// End-of-lesson quiz: instant feedback, first answer remembered in the browser, never gating.
+// Without JavaScript, each answer and explanation is available on demand.
+import { inlineMarkdown } from '../lib/inline.mjs';
+
+interface Props {
+	lessonKey: string;
+	quiz: { question: string; options: string[]; answerIndex: number; explanation: string }[];
+}
+const { lessonKey, quiz } = Astro.props;
+---
+
+{quiz.length > 0 && (
+	<section class="rfe-quiz not-content" data-rfe-quiz={lessonKey} aria-labelledby="rfe-quiz-heading">
+		<h2 id="rfe-quiz-heading">Check your understanding</h2>
+		<p class="rfe-quiz__intro">Quick recall. Your first answer stays in this browser; the quiz never blocks your progress.</p>
+		<ol class="rfe-quiz__list">
+			{quiz.map((q, i) => (
+				<li class="rfe-quiz__question" data-index={i} data-answer={q.answerIndex}>
+					<p class="rfe-quiz__prompt" set:html={inlineMarkdown(q.question)} />
+					<div class="rfe-quiz__options" role="group" aria-label={`Answers to question ${i + 1}`}>
+						{q.options.map((option) => (
+							<button type="button" class="rfe-quiz__option" disabled set:html={inlineMarkdown(option)} />
+						))}
+					</div>
+					<p class="rfe-quiz__feedback" role="status" data-pagefind-ignore hidden>
+						<span class="rfe-quiz__verdict" />
+						<span set:html={inlineMarkdown(q.explanation)} />
+					</p>
+					<details class="rfe-quiz__reveal" data-pagefind-ignore>
+						<summary>Show the answer</summary>
+						<p>
+							<strong>Answer:</strong> <span set:html={inlineMarkdown(q.options[q.answerIndex] ?? '')} /> —{' '}
+							<span set:html={inlineMarkdown(q.explanation)} />
+						</p>
+					</details>
+				</li>
+			))}
+		</ol>
+	</section>
+)}

@@ -1,0 +1,14 @@
+2026-07-01 08:00:12 INFO  server started on :7272
+2026-07-01 08:00:12 INFO  api started on :7273
+2026-07-01 08:01:03 INFO  login user=primary_user result=ok
+2026-07-01 08:01:44 WARN  slow response path=/api/catalog/search ms=812
+2026-07-01 08:02:10 INFO  order placed id=order-1043 ref=TRN-0043 qty=2
+2026-07-01 08:03:22 ERROR login user=blocked_user result=blocked
+2026-07-01 08:05:01 WARN  cart abandoned session=6f21 items=3
+2026-07-01 08:07:19 INFO  order placed id=order-1044 ref=TRN-0044 qty=1
+2026-07-01 08:09:55 ERROR api 404 path=/api/products/unknown
+2026-07-01 08:12:30 INFO  login user=reviewer_user result=ok
+2026-07-01 08:14:02 WARN  low stock product=desk-lamp stock=8
+2026-07-01 08:15:47 INFO  order placed id=order-1045 ref=TRN-0045 qty=5
+2026-07-01 08:18:11 ERROR checkout failed order=order-1046 reason=timeout
+2026-07-01 08:20:00 INFO  health check ok

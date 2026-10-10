@@ -1,0 +1,30 @@
+{
+	"title": "Labs & choosing how you run",
+	"tasks": [{ "title": "Learn how labs and the run options work", "kind": "read" }],
+	"quiz": [
+		{
+			"question": "What does a chapter's lab give you?",
+			"options": [
+				"A ready-to-run project with the chapter's starting files and pinned dependencies",
+				"A recorded video of the solution",
+				"A different color theme for this site"
+			],
+			"answerIndex": 0,
+			"explanation": "A lab is a complete project: the starting files plus `uv.lock` and `requirements.txt`, so one setup command gets you the exact versions everyone uses."
+		},
+		{
+			"question": "If you switch “Run with” from uv to venv, what happens?",
+			"options": [
+				"Nothing — the setting is cosmetic",
+				"Command examples adapt to venv, and the choice sticks across pages",
+				"The course switches to a different programming language"
+			],
+			"answerIndex": 1,
+			"explanation": "The picker changes how commands are shown on every page: `uv run robot checks` becomes `robot checks` in an activated venv. Set each lab up once for the runner you chose."
+		}
+	],
+	"deck": [
+		{ "term": "lab", "kind": "concept", "note": "A chapter's prepared project, downloaded as a .zip: starting files plus pinned dependencies, set up with one command." },
+		{ "term": "Run with", "kind": "concept", "note": "The uv / venv / poetry picker on lessons with commands; every command example adapts to it, and the choice sticks across pages." }
+	]
+}
