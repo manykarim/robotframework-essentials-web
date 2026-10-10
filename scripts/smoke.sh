@@ -27,9 +27,12 @@ check "unknown path is 404" 404 "$(status /does-not-exist/)"
 case "$(title /does-not-exist/)" in 404*) check "404 body is the site 404 page" yes yes ;;
     *) check "404 body is the site 404 page" "404 ..." "$(title /does-not-exist/)" ;; esac
 
+# GitHub Pages serves .zip as application/x-zip-compressed; local previews use application/zip.
 for lab in ch09-web-flows rf-essentials-starter-kit; do
     check "lab $lab.zip status" 200 "$(status "/labs/$lab.zip")"
-    check "lab $lab.zip type" application/zip "$(content_type "/labs/$lab.zip")"
+    type=$(content_type "/labs/$lab.zip")
+    case "$type" in application/zip|application/x-zip-compressed) check "lab $lab.zip type is zip" yes yes ;;
+        *) check "lab $lab.zip type is zip" "application/zip or application/x-zip-compressed" "$type" ;; esac
 done
 
 [ "$fail" = 0 ] && echo "all checks ok" || echo "some checks FAILED"
