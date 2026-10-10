@@ -13,7 +13,7 @@ The site is built with [Astro Starlight](https://starlight.astro.build/).
 
 ## Local development
 
-Requires Node.js 22 or newer.
+Requires Node.js 22 or newer (the workflow uses Node 22).
 
 ```sh
 npm ci                 # install exactly what package-lock.json pins (from registry.npmjs.org)
